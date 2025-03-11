@@ -7,7 +7,6 @@ output: html_notebook
 knitr::opts_chunk$set(message = F, warning = F)
 ```
 
-
 ## Tipos de Variáveis:
 
 -   As variáveis são elementos essenciais na análise de dados, podendo ser classificadas de acordo com suas características e comportamento.
@@ -41,7 +40,7 @@ knitr::opts_chunk$set(message = F, warning = F)
 library(ggplot2)  # Pacote para gráficos e visualização geral de dados
 library(dplyr)    # Pacote para manipulação de tabelas e variáveis
 library(moments)  # Para calcular assimetria e curtose
-library(pastecs)  # Para calcular estatísticas descritivas
+library(pastecs)  # Para calcular estatísticas descritivas com a função stat.desc
 ```
 
 -   **Média**: Soma de todos os valores dividida pelo número total de observações. Média é mais utilizada quando a amostra é mais simétrica e sem outliers. Ou seja, a média é mais sensível aos outliers.
@@ -77,9 +76,10 @@ library(pastecs)  # Para calcular estatísticas descritivas
 ```{r}
 set.seed(123)  # Para reprodutibilidade
 dados <- data.frame(
-  Valores = sample(13:18, 100, replace = TRUE),  # Dados discretos entre 13 e 18
-  Assimetria_Positiva = rlnorm(100, meanlog = 3.5, sdlog = 0.5),  # Dados com assimetria positiva
-  Curtose_Alta = rt(100, df = 3) * 10 + 50  # Dados com curtose alta (Distribuição de Student)
+  Valores  =  sample(13:60, 100, replace = TRUE),  # Dados discretos entre 13 e 60
+  Valores_simétricos = rnorm(100, mean = 0, sd = 1), # Dados normais
+  Assimetria_Positiva  =  rlnorm(100, meanlog = 3.5, sdlog = 0.5),  # Dados com assimetria positiva
+  Curtose_Alta  <-  rt(100, df = 3) * 10 + 50  # Dados com curtose alta (Distribuição de Student)
 )
 ```
 
