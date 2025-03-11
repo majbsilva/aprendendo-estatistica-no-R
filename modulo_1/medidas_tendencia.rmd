@@ -1,0 +1,136 @@
+---
+title: "Módulo 1"
+output: html_notebook
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(message = F, warning = F)
+```
+
+
+## Tipos de Variáveis:
+
+-   As variáveis são elementos essenciais na análise de dados, podendo ser classificadas de acordo com suas características e comportamento.
+
+### Variáveis Quantitativas:
+
+-   **Definição**: Representam valores numéricos que podem ser medidos ou contados.
+-   **Contínuas**: Podem assumir qualquer valor dentro de um intervalo. Exemplo: altura, peso, temperatura.
+-   **Discretas**: Assumem valores inteiros e contáveis. Exemplo: número de filhos, contagem de células em uma amostra.
+
+### Variáveis Qualitativas:
+
+-   **Definição**: Representam categorias ou atributos sem valor numérico.
+-   **Nominais**: Sem uma ordem específica. Exemplo: cor dos olhos (azul, verde, castanho).
+-   **Ordinais**: Possuem uma ordem hierárquica, mas sem uma diferença exata entre os níveis. Exemplo: grau de dor (leve, moderada, intensa).
+
+### Variáveis Binárias:
+
+-   **Definição**: Tipo especial de variável qualitativa que assume apenas dois valores possíveis.
+-   **Exemplo**: Presença ou ausência de uma mutação genética (Sim/Não), resposta a um tratamento (Eficaz/Não eficaz).
+
+### Variáveis Dependentes e Independentes:
+
+-   **Variável Independente**: Manipulada ou categorizada para avaliar seu efeito sobre a variável dependente. Exemplo: dose de um medicamento.
+-   **Variável Dependente**: Mede o efeito da variável independente. Exemplo: redução da carga tumoral após tratamento.
+
+## Medidas de tendência central
+
+```{r}
+# Carregar pacotes necessários
+library(ggplot2)  # Pacote para gráficos e visualização geral de dados
+library(dplyr)    # Pacote para manipulação de tabelas e variáveis
+library(moments)  # Para calcular assimetria e curtose
+library(pastecs)  # Para calcular estatísticas descritivas
+```
+
+-   **Média**: Soma de todos os valores dividida pelo número total de observações. Média é mais utilizada quando a amostra é mais simétrica e sem outliers. Ou seja, a média é mais sensível aos outliers.
+
+-   **Mediana**: Ponto central dos dados ordenados. A mediana é menos sensível à presença de outliers, representando melhor a tendência central dos dados.
+
+-   **Moda**: Valor que ocorre com maior frequência. Geralmente, utilizada para dados categóricos.
+
+## Medidas de Variabilidade:
+
+-   **Variância**: Mede a dispersão dos dados em relação à média.
+
+-   **Desvio Padrão**: Raiz quadrada da variância.
+
+-   **Amplitude**: Diferença entre o maior e menor valor.
+
+-   **Amplitude Interquartil**: Diferença entre o terceiro e o primeiro quartil.
+
+## Assimetria e Curtose:
+
+-   **Assimetria**: Mede a simetria da distribuição dos dados.
+
+    -   Assimetria positiva: Cauda mais longa à direita.
+
+    -   Assimetria negativa: Cauda mais longa à esquerda.
+
+-   **Curtose**: Mede o "achatamento" da distribuição.
+
+    -   Curtose alta (*leptocórtica*): Distribuição mais afunilada.
+
+    -   Curtose baixa (*platicórtica*): Distribuição mais achatada
+
+```{r}
+set.seed(123)  # Para reprodutibilidade
+dados <- data.frame(
+  Valores = sample(13:18, 100, replace = TRUE),  # Dados discretos entre 13 e 18
+  Assimetria_Positiva = rlnorm(100, meanlog = 3.5, sdlog = 0.5),  # Dados com assimetria positiva
+  Curtose_Alta = rt(100, df = 3) * 10 + 50  # Dados com curtose alta (Distribuição de Student)
+)
+```
+
+```{r}
+media <- mean(dados$Valores)
+mediana <- median(dados$Valores)
+moda <- as.numeric(names(sort(table(dados$Valores), decreasing = TRUE)[1])) # Moda calculada
+media
+mediana
+moda
+```
+
+## Medidas de variabilidade
+
+```{r}
+variabilidade <- data.frame(
+  Variancia = var(dados$Valores),
+  DesvioPadrao = sd(dados$Valores),
+  Amplitude = max(dados$Valores) - min(dados$Valores),
+  AmplitudeInterquartil = IQR(dados$Valores)
+)
+variabilidade
+```
+
+### Falando do intervalo interquartil
+
+```{r}
+ggplot(dados, aes(y = Valores)) +
+  geom_boxplot()
+ggplot(dados, aes(y = Assimetria_Positiva)) +
+  geom_boxplot()
+```
+
+### Cálculo de assimetria e curtose
+
+```{r}
+curtose_assimetria <- stat.desc(dados$Valores, norm = T)
+curtose_assimetria
+```
+
+### Histograma com curva de densidade para visualização
+
+```{r}
+ggplot(dados, aes(x = Assimetria_Positiva)) +
+    geom_histogram(aes(y = ..density..), bins = 20, fill = "gray", alpha = 0.7, color = "black") + 
+    geom_density(color = "red", size = 1) + 
+    geom_vline(aes(xintercept = mean(Assimetria_Positiva)), linetype = "dashed", color = "blue") + 
+    labs(
+      title = "Distribuição dos Dados com Média e Mediana",
+      x = "Dados Assimétricos Positivos",
+      y = "Densidade"
+    ) + 
+    theme_minimal()
+```
