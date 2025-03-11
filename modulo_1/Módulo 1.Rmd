@@ -3,15 +3,20 @@ title: "Módulo 1"
 output: html_notebook
 ---
 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(message = F, warning = F)
+```
+
+
 ## Tipos de Variáveis:
 
 -   As variáveis são elementos essenciais na análise de dados, podendo ser classificadas de acordo com suas características e comportamento.
 
 ### Variáveis Quantitativas:
 
--   **Definição**: Representam valores numéricos que podem ser medidos ou contados.
--   **Contínuas**: Podem assumir qualquer valor dentro de um intervalo. Exemplo: altura, peso, temperatura.
--   **Discretas**: Assumem valores inteiros e contáveis. Exemplo: número de filhos, contagem de células em uma amostra.
+-   **Definição**: representam valores numéricos que podem ser medidos ou contados.
+-   **Contínuas**: podem assumir qualquer valor dentro de um intervalo. Exemplo: altura, peso, temperatura.
+-   **Discretas**: assumem valores inteiros e contáveis. Exemplo: número de filhos, contagem de células em uma amostra.
 
 ### Variáveis Qualitativas:
 
@@ -31,7 +36,7 @@ output: html_notebook
 
 ## Medidas de tendência central
 
-```{r message=FALSE, warning=FALSE}
+```{r}
 # Carregar pacotes necessários
 library(ggplot2)  # Pacote para gráficos e visualização geral de dados
 library(dplyr)    # Pacote para manipulação de tabelas e variáveis
@@ -69,7 +74,7 @@ library(pastecs)  # Para calcular estatísticas descritivas
 
     -   Curtose baixa (*platicórtica*): Distribuição mais achatada
 
-```{r message=FALSE, warning=FALSE}
+```{r}
 set.seed(123)  # Para reprodutibilidade
 dados <- data.frame(
   Valores = sample(13:18, 100, replace = TRUE),  # Dados discretos entre 13 e 18
